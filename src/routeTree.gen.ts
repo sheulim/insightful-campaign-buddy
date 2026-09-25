@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as PlaybookRouteImport } from './routes/playbook'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
 
@@ -27,6 +29,16 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaybookRoute = PlaybookRouteImport.update({
+  id: '/playbook',
+  path: '/playbook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedCampaignsIndexRoute =
@@ -45,12 +57,16 @@ const AuthenticatedCampaignsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
+  '/playbook': typeof PlaybookRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
+  '/playbook': typeof PlaybookRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
 }
@@ -59,19 +75,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/compare': typeof CompareRoute
+  '/playbook': typeof PlaybookRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/campaigns/$id' | '/campaigns/'
+  fullPaths:
+    '/' | '/auth' | '/compare' | '/playbook' | '/campaigns/$id' | '/campaigns/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/campaigns/$id' | '/campaigns'
+  to: '/' | '/auth' | '/compare' | '/playbook' | '/campaigns/$id' | '/campaigns'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/compare'
+    | '/playbook'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/'
   fileRoutesById: FileRoutesById
@@ -80,6 +101,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CompareRoute: typeof CompareRoute
+  PlaybookRoute: typeof PlaybookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -103,6 +126,20 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playbook': {
+      id: '/playbook'
+      path: '/playbook'
+      fullPath: '/playbook'
+      preLoaderRoute: typeof PlaybookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/campaigns/': {
@@ -140,6 +177,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  CompareRoute: CompareRoute,
+  PlaybookRoute: PlaybookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
