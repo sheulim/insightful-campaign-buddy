@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      approval_events: {
+        Row: {
+          action: string
+          actor_id: string
+          campaign_id: string
+          created_at: string
+          id: string
+          item_id: string
+          item_kind: string
+          item_title: string
+          note: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          campaign_id: string
+          created_at?: string
+          id?: string
+          item_id: string
+          item_kind: string
+          item_title?: string
+          note?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_kind?: string
+          item_title?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       calendar_items: {
         Row: {
           campaign_id: string
@@ -57,6 +101,73 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "calendar_items_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_recommendations: {
+        Row: {
+          brief: string
+          campaign_id: string
+          created_at: string
+          id: string
+          result: Json
+          user_id: string
+        }
+        Insert: {
+          brief: string
+          campaign_id: string
+          created_at?: string
+          id?: string
+          result: Json
+          user_id: string
+        }
+        Update: {
+          brief?: string
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          result?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_recommendations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_reviewers: {
+        Row: {
+          assigned_by: string
+          campaign_id: string
+          created_at: string
+          id: string
+          reviewer_id: string
+        }
+        Insert: {
+          assigned_by: string
+          campaign_id: string
+          created_at?: string
+          id?: string
+          reviewer_id: string
+        }
+        Update: {
+          assigned_by?: string
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_reviewers_campaign_id_fkey"
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "campaigns"
@@ -180,15 +291,67 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_campaign_owner: {
+        Args: { _campaign_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_campaign_reviewer: {
+        Args: { _campaign_id: string; _user_id: string }
+        Returns: boolean
+      }
+      record_approval: {
+        Args: {
+          _action: string
+          _item_id: string
+          _kind: string
+          _note?: string
+        }
+        Returns: undefined
+      }
+      set_user_role: {
+        Args: {
+          _enabled: boolean
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "manager" | "reviewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -315,6 +478,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "manager", "reviewer"],
+    },
   },
 } as const
