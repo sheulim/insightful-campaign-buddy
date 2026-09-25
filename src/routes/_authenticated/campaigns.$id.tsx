@@ -355,3 +355,113 @@ function AssetCard({ asset, campaignId }: { asset: Asset; campaignId: string }) 
     </div>
   );
 }
+
+type BudgetCampaign = {
+  id: string;
+  title: string;
+  budget: number;
+  expected_revenue: number;
+  actual_cost: number;
+};
+
+function BudgetPanel({
+  campaign,
+  onExport,
+  canExport,
+}: {
+  campaign: BudgetCampaign;
+  onExport: () => void;
+  canExport: boolean;
+}) {
+  const queryClient = useQueryClient();
+  const [values, setValues] = useState({
+    budget: String(campaign.budget ?? 0),
+    expected_revenue: String(campaign.expected_revenue ?? 0),
+    actual_cost: String(campaign.actual_cost ?? 0),
+  });
+  const [dirty, setDirty] = useState(false);
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("campaigns")
+        .update({
+          budget: Number(values.budget) || 0,
+          expected_revenue: Number(values.expected_revenue) || 0,
+          actual_cost: Number(values.actual_cost) || 0,
+        })
+        .eq("id", campaign.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      setDirty(false);
+      queryClient.invalidateQueries({ queryKey: ["campaign", campaign.id] });
+      toast.success("Budget saved.");
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save."),
+  });
+
+  const remaining = (Number(values.budget) || 0) - (Number(values.actual_cost) || 0);
+
+  return (
+    <div className="panel mt-4 p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="eyebrow">Budget and expected return</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Remaining budget:{" "}
+            <span className={remaining < 0 ? "text-destructive" : "text-primary"}>
+              {remaining.toLocaleString()}
+            </span>
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" disabled={!canExport} onClick={onExport}>
+            Export calendar
+          </Button>
+          <Button size="sm" disabled={!dirty || save.isPending} onClick={() => save.mutate()}>
+            {dirty ? "Save budget" : "Saved"}
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+        {(
+          [
+            ["budget", "Planned budget"],
+            ["actual_cost", "Actual spend"],
+            ["expected_revenue", "Expected return"],
+          ] as const
+        ).map(([key, label]) => (
+          <div key={key} className="space-y-2">
+            <p className="text-xs text-muted-foreground">{label}</p>
+            <Input
+              type="number"
+              min="0"
+              value={values[key]}
+              onChange={(e) => {
+                setValues({ ...values, [key]: e.target.value });
+                setDirty(true);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function exportCalendarCsv(title: string, items: CalendarItem[]) {
+  const header = ["Date", "Title", "Description", "Type", "Channel", "Status"];
+  const escape = (value: string) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+  const rows = items.map((i) =>
+    [i.item_date, i.title, i.description, i.item_type, i.channel, i.status].map(escape).join(","),
+  );
+  const csv = [header.join(","), ...rows].join("\n");
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${title.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "campaign"}-calendar.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
