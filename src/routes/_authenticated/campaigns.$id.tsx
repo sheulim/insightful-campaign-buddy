@@ -10,6 +10,15 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  ApprovalControls,
+  ApprovalHistory,
+  RecommendationsPanel,
+  ReviewersPanel,
+} from "@/components/campaign-workflow";
+
+type Perms = { isOwner: boolean; isReviewer: boolean };
 
 export const Route = createFileRoute("/_authenticated/campaigns/$id")({
   head: () => ({
@@ -90,11 +99,24 @@ function CampaignDetail() {
       toast.error(error instanceof Error ? error.message : "Plan generation failed."),
   });
 
+  const { user } = useAuth();
+  const reviewerRows = useQuery({
+    queryKey: ["campaign_reviewers", id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("campaign_reviewers").select("*").eq("campaign_id", id);
+      if (error) throw error;
+      return data;
+    },
+  });
   const c = campaign.data;
+  const perms: Perms = {
+    isOwner: !!c && c.user_id === user?.id,
+    isReviewer: (reviewerRows.data ?? []).some((r) => r.reviewer_id === user?.id),
+  };
   const hasPlan = (items.data?.length ?? 0) > 0;
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-12">
+    <main className="mx-auto w-full max-w-6xl p-6">
       <Link to="/campaigns" className="eyebrow">
         ← All campaigns
       </Link>
@@ -108,7 +130,7 @@ function CampaignDetail() {
             </p>
           ) : null}
         </div>
-        <Button onClick={() => runGenerate.mutate()} disabled={runGenerate.isPending}>
+        <Button onClick={() => runGenerate.mutate()} disabled={runGenerate.isPending || !perms.isOwner}>
           {runGenerate.isPending
             ? "Building your plan…"
             : hasPlan
@@ -139,13 +161,29 @@ function CampaignDetail() {
           <TabsTrigger value="ideas">Ideas</TabsTrigger>
           <TabsTrigger value="scripts">Ad scripts</TabsTrigger>
           <TabsTrigger value="brief">Creative brief</TabsTrigger>
+          <TabsTrigger value="strategy">AI strategy</TabsTrigger>
+          <TabsTrigger value="review">Review & history</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="strategy" className="mt-6">
+          {c ? (
+            <RecommendationsPanel
+              campaignId={id}
+              isOwner={perms.isOwner}
+              defaultBrief={[c.business_brief, c.target_audience && `Audience: ${c.target_audience}`, c.campaign_goal && `Goal: ${c.campaign_goal}`].filter(Boolean).join("\n")}
+            />
+          ) : null}
+        </TabsContent>
+        <TabsContent value="review" className="mt-6 grid gap-6 md:grid-cols-[1fr_1.4fr]">
+          <ReviewersPanel campaignId={id} isOwner={perms.isOwner} />
+          <ApprovalHistory campaignId={id} />
+        </TabsContent>
 
         <TabsContent value="calendar" className="mt-6">
           {hasPlan ? (
             <div className="space-y-3">
               {items.data!.map((item) => (
-                <CalendarRow key={item.id} item={item} campaignId={id} />
+                <CalendarRow key={item.id} item={item} campaignId={id} perms={perms} />
               ))}
             </div>
           ) : (
@@ -154,13 +192,13 @@ function CampaignDetail() {
         </TabsContent>
 
         <TabsContent value="ideas" className="mt-6">
-          <AssetList assets={assets.data ?? []} type="idea" campaignId={id} />
+          <AssetList assets={assets.data ?? []} type="idea" campaignId={id} perms={perms} />
         </TabsContent>
         <TabsContent value="scripts" className="mt-6">
-          <AssetList assets={assets.data ?? []} type="script" campaignId={id} />
+          <AssetList assets={assets.data ?? []} type="script" campaignId={id} perms={perms} />
         </TabsContent>
         <TabsContent value="brief" className="mt-6">
-          <AssetList assets={assets.data ?? []} type="creative_brief" campaignId={id} />
+          <AssetList assets={assets.data ?? []} type="creative_brief" campaignId={id} perms={perms} />
         </TabsContent>
       </Tabs>
     </main>
@@ -201,7 +239,7 @@ type CalendarItem = {
   status: string;
 };
 
-function CalendarRow({ item, campaignId }: { item: CalendarItem; campaignId: string }) {
+function CalendarRow({ item, campaignId, perms }: { item: CalendarItem; campaignId: string; perms: Perms }) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState({ title: item.title, description: item.description });
@@ -218,7 +256,6 @@ function CalendarRow({ item, campaignId }: { item: CalendarItem; campaignId: str
     onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save."),
   });
 
-  const approved = item.status === "approved";
 
   return (
     <div className="panel flex flex-col gap-3 p-4 md:flex-row md:items-start">
@@ -257,21 +294,12 @@ function CalendarRow({ item, campaignId }: { item: CalendarItem; campaignId: str
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <Badge variant={approved ? "default" : "outline"}>{approved ? "Approved" : "Draft"}</Badge>
-        {!editing ? (
-          <>
-            <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => save.mutate({ status: approved ? "draft" : "approved" })}
-            >
-              {approved ? "Unapprove" : "Approve"}
-            </Button>
-          </>
+        {!editing && perms.isOwner && item.status !== "approved" ? (
+          <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
+            Edit
+          </Button>
         ) : null}
+        <ApprovalControls kind="calendar_item" itemId={item.id} status={item.status} campaignId={campaignId} {...perms} />
       </div>
     </div>
   );
@@ -289,10 +317,12 @@ function AssetList({
   assets,
   type,
   campaignId,
+  perms,
 }: {
   assets: Asset[];
   type: string;
   campaignId: string;
+  perms: Perms;
 }) {
   const filtered = assets.filter((a) => a.asset_type === type);
   if (filtered.length === 0) {
@@ -305,13 +335,13 @@ function AssetList({
   return (
     <div className="space-y-4">
       {filtered.map((asset) => (
-        <AssetCard key={asset.id} asset={asset} campaignId={campaignId} />
+        <AssetCard key={asset.id} asset={asset} campaignId={campaignId} perms={perms} />
       ))}
     </div>
   );
 }
 
-function AssetCard({ asset, campaignId }: { asset: Asset; campaignId: string }) {
+function AssetCard({ asset, campaignId, perms }: { asset: Asset; campaignId: string; perms: Perms }) {
   const queryClient = useQueryClient();
   const [content, setContent] = useState(asset.content);
   const [dirty, setDirty] = useState(false);
@@ -335,18 +365,24 @@ function AssetCard({ asset, campaignId }: { asset: Asset; campaignId: string }) 
     <div className="panel p-5">
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-display text-base font-semibold">{asset.title}</h3>
-        <Button
-          size="sm"
-          variant={dirty ? "default" : "ghost"}
-          disabled={!dirty || save.isPending}
-          onClick={() => save.mutate()}
-        >
-          {dirty ? "Save changes" : "Saved"}
-        </Button>
+        <div className="flex items-start gap-2">
+          {perms.isOwner ? (
+            <Button
+              size="sm"
+              variant={dirty ? "default" : "ghost"}
+              disabled={!dirty || save.isPending}
+              onClick={() => save.mutate()}
+            >
+              {dirty ? "Save changes" : "Saved"}
+            </Button>
+          ) : null}
+          <ApprovalControls kind="asset" itemId={asset.id} status={asset.status} campaignId={campaignId} {...perms} />
+        </div>
       </div>
       <Textarea
         className="mt-3 min-h-32 font-sans text-sm leading-relaxed"
         value={content}
+        readOnly={!perms.isOwner}
         onChange={(e) => {
           setContent(e.target.value);
           setDirty(true);
