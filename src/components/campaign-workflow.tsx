@@ -63,6 +63,7 @@ export function ApprovalControls({
       qc.invalidateQueries({ queryKey: ["calendar_items", campaignId] });
       qc.invalidateQueries({ queryKey: ["generated_assets", campaignId] });
       qc.invalidateQueries({ queryKey: ["approval_events"] });
+      qc.invalidateQueries({ queryKey: ["review_queue"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Action failed."),
   });
