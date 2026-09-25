@@ -14,7 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      calendar_items: {
+        Row: {
+          campaign_id: string
+          channel: string
+          created_at: string
+          description: string
+          id: string
+          item_date: string
+          item_type: string
+          position: number
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          channel?: string
+          created_at?: string
+          description?: string
+          id?: string
+          item_date: string
+          item_type?: string
+          position?: number
+          status?: string
+          title: string
+          user_id?: string
+        }
+        Update: {
+          campaign_id?: string
+          channel?: string
+          created_at?: string
+          description?: string
+          id?: string
+          item_date?: string
+          item_type?: string
+          position?: number
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_items_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          business_brief: string
+          campaign_goal: string
+          channels: string[]
+          created_at: string
+          end_date: string
+          id: string
+          start_date: string
+          status: string
+          target_audience: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_brief?: string
+          campaign_goal?: string
+          channels?: string[]
+          created_at?: string
+          end_date?: string
+          id?: string
+          start_date?: string
+          status?: string
+          target_audience?: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          business_brief?: string
+          campaign_goal?: string
+          channels?: string[]
+          created_at?: string
+          end_date?: string
+          id?: string
+          start_date?: string
+          status?: string
+          target_audience?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      generated_assets: {
+        Row: {
+          asset_type: string
+          campaign_id: string
+          content: string
+          created_at: string
+          id: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          asset_type: string
+          campaign_id: string
+          content?: string
+          created_at?: string
+          id?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Update: {
+          asset_type?: string
+          campaign_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_assets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
