@@ -125,6 +125,14 @@ function CampaignDetail() {
         </div>
       ) : null}
 
+      {c ? (
+        <BudgetPanel
+          campaign={c}
+          onExport={() => exportCalendarCsv(c.title, items.data ?? [])}
+          canExport={hasPlan}
+        />
+      ) : null}
+
       <Tabs defaultValue="calendar" className="mt-10">
         <TabsList>
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
