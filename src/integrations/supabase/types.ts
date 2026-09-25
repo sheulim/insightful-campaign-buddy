@@ -66,11 +66,14 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          actual_cost: number
+          budget: number
           business_brief: string
           campaign_goal: string
           channels: string[]
           created_at: string
           end_date: string
+          expected_revenue: number
           id: string
           start_date: string
           status: string
@@ -80,11 +83,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          actual_cost?: number
+          budget?: number
           business_brief?: string
           campaign_goal?: string
           channels?: string[]
           created_at?: string
           end_date?: string
+          expected_revenue?: number
           id?: string
           start_date?: string
           status?: string
@@ -94,11 +100,14 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          actual_cost?: number
+          budget?: number
           business_brief?: string
           campaign_goal?: string
           channels?: string[]
           created_at?: string
           end_date?: string
+          expected_revenue?: number
           id?: string
           start_date?: string
           status?: string
