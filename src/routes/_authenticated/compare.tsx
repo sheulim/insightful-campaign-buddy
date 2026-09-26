@@ -110,7 +110,7 @@ const CLOSED = [
 ];
 
 const PARKED = [
-  "Pulling real audiences from customer records — needs a contact database this MVP deliberately skips.",
+  "Pulling real audiences from customer records — needs a contact database we deliberately skip.",
   "Sending email and pushing ads — execution stays in the tools you already pay for.",
   "Revenue attribution — needs closed-deal data flowing back in.",
   "Shared team workspaces with roles — parked alongside realtime collaboration.",
@@ -136,7 +136,7 @@ function Compare() {
         </h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
           Zoho CRM is a full customer suite with campaigns attached. CampaignForge is a planner that
-          starts from a brief. Comparing them shows exactly where a focused MVP wins, where it must
+          starts from a brief. Comparing them shows exactly where a focused planner wins, where it must
           not pretend to compete, and which gaps were worth closing straight away.
         </p>
 
@@ -196,9 +196,6 @@ function Compare() {
         <div className="panel mt-16 flex flex-wrap items-center justify-between gap-4 p-7">
           <p className="text-sm text-muted-foreground">See the closed gaps in the product.</p>
           <div className="flex gap-2">
-            <Link to="/playbook">
-              <Button variant="outline">Build steps</Button>
-            </Link>
             <Link to="/campaigns">
               <Button>Open campaigns</Button>
             </Link>

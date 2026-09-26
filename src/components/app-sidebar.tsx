@@ -131,33 +131,16 @@ export function AppSidebar() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <Collapsible asChild className="group/collapsible">
+            {isAdmin && (
               <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip="Guides">
-                    <BookOpen />
-                    <span>Guides</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild>
-                        <Link to="/playbook">Build steps</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    {isAdmin && <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild>
-                        <Link to="/compare">
-                          <GitCompare className="size-3" /> vs Zoho CRM
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
+                <SidebarMenuButton asChild tooltip="vs Zoho CRM" isActive={path === "/compare"}>
+                  <Link to="/compare">
+                    <GitCompare />
+                    <span>vs Zoho CRM</span>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
-            </Collapsible>
+            )}
           </SidebarMenu>
         </SidebarGroup>
 
