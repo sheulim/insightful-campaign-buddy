@@ -46,7 +46,7 @@ function Landing() {
 
       <main>
         <section className="mx-auto max-w-6xl px-5 pb-20 pt-20 md:pt-28">
-          <p className="eyebrow">AI campaign planner · MVP</p>
+          <p className="eyebrow">AI campaign planner</p>
           <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.05] md:text-7xl">
             Brief in.
             <br />
@@ -61,11 +61,6 @@ function Landing() {
             <Link to={user ? "/campaigns" : "/auth"}>
               <Button size="lg" className="shadow-signal">
                 {user ? "Open your campaigns" : "Start a campaign"}
-              </Button>
-            </Link>
-            <Link to="/playbook">
-              <Button size="lg" variant="outline">
-                See the build steps
               </Button>
             </Link>
           </div>
@@ -102,7 +97,7 @@ function Landing() {
 
       <footer className="border-t border-border py-10">
         <div className="mx-auto max-w-6xl px-5 text-xs text-muted-foreground">
-          CampaignForge — AI campaign planner MVP.
+          CampaignForge — AI campaign planner.
         </div>
       </footer>
     </div>

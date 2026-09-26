@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as PlaybookRouteImport } from './routes/playbook'
 import { Route as AuthenticatedApprovalsRouteImport } from './routes/_authenticated/approvals'
 import { Route as AuthenticatedCompareRouteImport } from './routes/_authenticated/compare'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
@@ -31,11 +30,6 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlaybookRoute = PlaybookRouteImport.update({
-  id: '/playbook',
-  path: '/playbook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedApprovalsRoute = AuthenticatedApprovalsRouteImport.update({
@@ -69,7 +63,6 @@ const AuthenticatedCampaignsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/playbook': typeof PlaybookRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/compare': typeof AuthenticatedCompareRoute
   '/team': typeof AuthenticatedTeamRoute
@@ -79,7 +72,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/playbook': typeof PlaybookRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/compare': typeof AuthenticatedCompareRoute
   '/team': typeof AuthenticatedTeamRoute
@@ -91,7 +83,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
-  '/playbook': typeof PlaybookRoute
   '/_authenticated/approvals': typeof AuthenticatedApprovalsRoute
   '/_authenticated/compare': typeof AuthenticatedCompareRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
@@ -103,7 +94,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/playbook'
     | '/approvals'
     | '/compare'
     | '/team'
@@ -113,7 +103,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/playbook'
     | '/approvals'
     | '/compare'
     | '/team'
@@ -124,7 +113,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/playbook'
     | '/_authenticated/approvals'
     | '/_authenticated/compare'
     | '/_authenticated/team'
@@ -136,7 +124,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
-  PlaybookRoute: typeof PlaybookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -160,13 +147,6 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/playbook': {
-      id: '/playbook'
-      path: '/playbook'
-      fullPath: '/playbook'
-      preLoaderRoute: typeof PlaybookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/approvals': {
@@ -231,7 +211,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
-  PlaybookRoute: PlaybookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
