@@ -158,9 +158,6 @@ function Playbook() {
         <div className="panel mt-16 flex flex-wrap items-center justify-between gap-4 p-7">
           <p className="text-sm text-muted-foreground">Ready to run step 11 yourself?</p>
           <div className="flex gap-2">
-            <Link to="/compare">
-              <Button variant="outline">See the Zoho comparison</Button>
-            </Link>
             <Link to="/campaigns">
               <Button>Plan a campaign</Button>
             </Link>

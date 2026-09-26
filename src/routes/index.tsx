@@ -98,24 +98,6 @@ function Landing() {
           </div>
         </section>
 
-        <section className="border-t border-border">
-          <div className="mx-auto max-w-6xl px-5 py-20">
-            <div className="panel bg-gradient-signal p-10 text-primary-foreground md:p-14">
-              <h2 className="max-w-lg text-3xl font-semibold md:text-4xl">
-                How does this stack up against a CRM suite like Zoho?
-              </h2>
-              <p className="mt-4 max-w-lg text-sm/relaxed opacity-80">
-                We ran a side-by-side against Zoho CRM's campaign tooling, listed every gap, and
-                shipped the ones that matter at MVP size.
-              </p>
-              <Link to="/compare" className="mt-7 inline-block">
-                <Button size="lg" variant="secondary">
-                  Read the comparison
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
       </main>
 
       <footer className="border-t border-border py-10">

@@ -147,13 +147,13 @@ export function AppSidebar() {
                         <Link to="/playbook">Build steps</Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
+                    {isAdmin && <SidebarMenuSubItem>
                       <SidebarMenuSubButton asChild>
                         <Link to="/compare">
                           <GitCompare className="size-3" /> vs Zoho CRM
                         </Link>
                       </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
+                    </SidebarMenuSubItem>}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>

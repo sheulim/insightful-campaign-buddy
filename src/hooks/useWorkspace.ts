@@ -23,16 +23,9 @@ export function useMembers() {
   return useQuery({
     queryKey: ["members"],
     queryFn: async () => {
-      const [{ data: profiles, error }, { data: roles, error: e2 }] = await Promise.all([
-        supabase.from("profiles").select("id, email, full_name, created_at").order("created_at"),
-        supabase.from("user_roles").select("user_id, role"),
-      ]);
+      const { data, error } = await supabase.rpc("list_members");
       if (error) throw error;
-      if (e2) throw e2;
-      return (profiles ?? []).map((p) => ({
-        ...p,
-        roles: (roles ?? []).filter((r) => r.user_id === p.id).map((r) => r.role as AppRole),
-      }));
+      return (data ?? []).map((m) => ({ ...m, roles: (m.roles ?? []) as AppRole[] }));
     },
   });
 }
