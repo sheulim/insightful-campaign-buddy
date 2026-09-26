@@ -43,13 +43,20 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: `${window.location.origin}/campaigns` },
         });
         if (error) throw error;
-        toast.success("Account created. Check your inbox to confirm your email.");
+        if (data.user && (data.user.identities?.length ?? 0) === 0) {
+          toast.error(
+            "This email already has an account (maybe via Google). Use “Continue with Google” or sign in instead.",
+          );
+          setMode("signin");
+          return;
+        }
+        toast.success("Account created. Check your inbox (and spam) to confirm your email.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
