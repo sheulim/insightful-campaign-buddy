@@ -56,6 +56,11 @@ function AuthPage() {
           setMode("signin");
           return;
         }
+        if (data.session) {
+          toast.success("Account created — welcome!");
+          navigate({ to: "/campaigns" });
+          return;
+        }
         toast.success("Account created. Check your inbox (and spam) to confirm your email.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
