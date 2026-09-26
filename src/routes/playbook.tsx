@@ -99,7 +99,7 @@ const PHASES: Array<{
       },
       {
         n: "10",
-        title: "Gaps closed after the Zoho comparison",
+        title: "Approvals, budget and export",
         body: "Draft/approved workflow on every item, CSV export of the calendar, and a budget and expected-return panel per campaign.",
         done: true,
       },
@@ -127,8 +127,7 @@ function Playbook() {
         <p className="eyebrow">MVP playbook</p>
         <h1 className="mt-4 text-4xl font-semibold md:text-5xl">The twelve build steps</h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
-          The plan CampaignForge was built against, from problem framing to demo — with the gaps
-          found in the Zoho CRM comparison folded into step 10.
+          The plan CampaignForge was built against, from problem framing to demo.
         </p>
 
         <div className="mt-14 space-y-14">
@@ -158,9 +157,6 @@ function Playbook() {
         <div className="panel mt-16 flex flex-wrap items-center justify-between gap-4 p-7">
           <p className="text-sm text-muted-foreground">Ready to run step 11 yourself?</p>
           <div className="flex gap-2">
-            <Link to="/compare">
-              <Button variant="outline">See the Zoho comparison</Button>
-            </Link>
             <Link to="/campaigns">
               <Button>Plan a campaign</Button>
             </Link>

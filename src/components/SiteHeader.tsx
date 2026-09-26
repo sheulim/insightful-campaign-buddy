@@ -24,12 +24,6 @@ export function SiteHeader() {
           >
             Build steps
           </Link>
-          <Link
-            to="/compare"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            vs Zoho CRM
-          </Link>
           {user ? (
             <Link
               to="/campaigns"

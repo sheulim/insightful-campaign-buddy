@@ -332,6 +332,16 @@ export type Database = {
         Args: { _campaign_id: string; _user_id: string }
         Returns: boolean
       }
+      list_members: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          roles: Database["public"]["Enums"]["app_role"][]
+        }[]
+      }
       record_approval: {
         Args: {
           _action: string

@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/SiteHeader";
+import { useMyRoles } from "@/hooks/useWorkspace";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/compare")({
+export const Route = createFileRoute("/_authenticated/compare")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "CampaignForge vs Zoho CRM campaigns" },
       {
         name: "description",
@@ -122,9 +123,12 @@ const VERDICT_STYLE: Record<Row["verdict"], { label: string; className: string }
 };
 
 function Compare() {
+  const { isAdmin, loading } = useMyRoles();
+  if (loading) return null;
+  if (!isAdmin)
+    return <p className="p-10 text-sm text-muted-foreground">This page is private to workspace admins.</p>;
   return (
     <div className="min-h-screen">
-      <SiteHeader />
       <main className="mx-auto max-w-5xl px-5 py-16">
         <p className="eyebrow">Comparative analysis</p>
         <h1 className="mt-4 text-4xl font-semibold md:text-5xl">
