@@ -20,10 +20,10 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-1 md:flex">
           {user ? (
             <Link
-              to="/campaigns"
+              to="/dashboard"
               className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
-              Campaigns
+              Dashboard
             </Link>
           ) : null}
         </nav>

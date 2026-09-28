@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedApprovalsRouteImport } from './routes/_authenticated/approvals'
 import { Route as AuthenticatedCompareRouteImport } from './routes/_authenticated/compare'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
 import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
 import { Route as AuthenticatedCampaignsIdRouteImport } from './routes/_authenticated/campaigns.$id'
@@ -42,6 +43,11 @@ const AuthenticatedCompareRoute = AuthenticatedCompareRouteImport.update({
   path: '/compare',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/compare': typeof AuthenticatedCompareRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/team': typeof AuthenticatedTeamRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/compare': typeof AuthenticatedCompareRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/team': typeof AuthenticatedTeamRoute
   '/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/campaigns': typeof AuthenticatedCampaignsIndexRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/approvals': typeof AuthenticatedApprovalsRoute
   '/_authenticated/compare': typeof AuthenticatedCompareRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/team': typeof AuthenticatedTeamRoute
   '/_authenticated/campaigns/$id': typeof AuthenticatedCampaignsIdRoute
   '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/approvals'
     | '/compare'
+    | '/dashboard'
     | '/team'
     | '/campaigns/$id'
     | '/campaigns/'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/approvals'
     | '/compare'
+    | '/dashboard'
     | '/team'
     | '/campaigns/$id'
     | '/campaigns'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/approvals'
     | '/_authenticated/compare'
+    | '/_authenticated/dashboard'
     | '/_authenticated/team'
     | '/_authenticated/campaigns/$id'
     | '/_authenticated/campaigns/'
@@ -163,6 +175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCompareRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/team': {
       id: '/_authenticated/team'
       path: '/team'
@@ -190,6 +209,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedApprovalsRoute: typeof AuthenticatedApprovalsRoute
   AuthenticatedCompareRoute: typeof AuthenticatedCompareRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
   AuthenticatedCampaignsIdRoute: typeof AuthenticatedCampaignsIdRoute
   AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
@@ -198,6 +218,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedApprovalsRoute: AuthenticatedApprovalsRoute,
   AuthenticatedCompareRoute: AuthenticatedCompareRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedTeamRoute: AuthenticatedTeamRoute,
   AuthenticatedCampaignsIdRoute: AuthenticatedCampaignsIdRoute,
   AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
