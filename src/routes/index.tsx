@@ -6,98 +6,211 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CampaignForge — brief to campaign plan in 15 minutes" },
+      { title: "CampaignForge — plan, publish and track every campaign" },
       {
         name: "description",
         content:
-          "CampaignForge turns a brief, audience, goal and dates into an editable marketing calendar with content ideas, ad scripts and a creative brief.",
+          "CampaignForge turns a short brief into a dated campaign plan with content ideas, ad scripts and a creative brief, then tracks approvals, budget and results for every campaign.",
       },
-      { property: "og:title", content: "CampaignForge — brief to campaign plan in 15 minutes" },
+      { property: "og:title", content: "CampaignForge — plan, publish and track every campaign" },
       {
         property: "og:description",
         content:
-          "CampaignForge turns a brief, audience, goal and dates into an editable marketing calendar with content ideas, ad scripts and a creative brief.",
+          "CampaignForge turns a short brief into a dated campaign plan with content ideas, ad scripts and a creative brief, then tracks approvals, budget and results for every campaign.",
       },
     ],
   }),
   component: Landing,
 });
 
-const JOURNEY = [
-  { step: "01", title: "Enter the brief", body: "Audience, goal, channels, dates. Two minutes." },
-  { step: "02", title: "Generate", body: "A day-by-day calendar plus ideas, scripts and a brief." },
-  { step: "03", title: "Review", body: "Everything in one screen — no tab hopping." },
-  { step: "04", title: "Edit and save", body: "Approve what works, rewrite what doesn't. It persists." },
+const FEATURES = [
+  {
+    title: "Plan from one brief",
+    body: "Goal, audience, channels and dates in. A dated calendar, content ideas, ad scripts and a creative brief out.",
+  },
+  {
+    title: "Review and approve",
+    body: "Assign reviewers, submit posts for approval, request changes and keep the full history in one place.",
+  },
+  {
+    title: "Budget and returns",
+    body: "Set a budget and expected revenue for each campaign, record spend, and see return across every campaign.",
+  },
+  {
+    title: "Moments that matter",
+    body: "Upcoming holidays and festivals for India and global markets, so plans land on the days customers care about.",
+  },
+  {
+    title: "AI strategy",
+    body: "Audience segments, a channel mix and messaging angles recommended from your brief.",
+  },
+  {
+    title: "Export anywhere",
+    body: "Download the calendar and hand it to whatever scheduling or reporting tool your team already uses.",
+  },
 ];
 
-const DELIVERS = [
-  { label: "Day-by-day calendar", body: "Dated items typed by content, social, ad, email or event." },
-  { label: "Content ideas", body: "Four or more angles grounded in your audience and offer." },
-  { label: "Ad scripts", body: "Hook, body and call to action, ready to record or run." },
-  { label: "Creative brief", body: "Objective, insight, message, tone, deliverables, measures." },
+const STEPS = [
+  { title: "Write a short brief", body: "Business, audience, goal, channels and dates." },
+  {
+    title: "Generate the plan",
+    body: "A dated calendar with ideas, scripts and a creative brief.",
+  },
+  { title: "Review and approve", body: "Refine what needs work and send posts to reviewers." },
+  { title: "Publish and track", body: "Export the calendar and follow spend and returns." },
+];
+
+const CHANNELS = [
+  "Instagram",
+  "Facebook",
+  "YouTube",
+  "X",
+  "LinkedIn",
+  "Blog",
+  "Google Ads",
+  "Email",
+  "WhatsApp",
 ];
 
 function Landing() {
   const { user } = useAuth();
+  const primaryTo = user ? "/dashboard" : "/auth";
+  const primaryLabel = user ? "Open your dashboard" : "Create your account";
 
   return (
     <div className="min-h-screen">
       <SiteHeader />
 
       <main>
-        <section className="mx-auto max-w-6xl px-5 pb-20 pt-20 md:pt-28">
-          <p className="eyebrow">AI campaign planner</p>
-          <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.05] md:text-7xl">
-            Brief in.
-            <br />
-            <span className="text-gradient-signal">Whole campaign out.</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Briefs, calendars and creative live in different tools, so handoffs break. CampaignForge
-            takes one short brief and returns an editable plan — calendar, ideas, ad scripts and a
-            creative brief — in about fifteen minutes.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link to={user ? "/campaigns" : "/auth"}>
-              <Button size="lg" className="shadow-signal">
-                {user ? "Open your campaigns" : "Start a campaign"}
-              </Button>
-            </Link>
+        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:grid-cols-[1.15fr_1fr] md:pt-24">
+          <div>
+            <p className="eyebrow">Campaign planning and tracking</p>
+            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] text-balance md:text-6xl">
+              Plan every campaign. <span className="text-gradient-signal">Track every rupee.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+              Write a short brief and get a dated plan with content ideas, ad scripts and a creative
+              brief. Then send posts for approval, record spend and see how every campaign is doing.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to={primaryTo}>
+                <Button size="lg" className="shadow-signal">
+                  {primaryLabel}
+                </Button>
+              </Link>
+              {!user ? (
+                <Link to="/auth">
+                  <Button size="lg" variant="outline">
+                    Sign in
+                  </Button>
+                </Link>
+              ) : null}
+            </div>
           </div>
 
-          <div className="mt-20 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-4">
-            {JOURNEY.map((j) => (
-              <div key={j.step} className="bg-surface p-6">
-                <p className="font-mono text-xs text-primary">{j.step}</p>
-                <h3 className="mt-3 font-display text-base font-semibold">{j.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{j.body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="border-t border-border">
-          <div className="mx-auto max-w-6xl px-5 py-20">
-            <p className="eyebrow">What one run produces</p>
-            <h2 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
-              Four artefacts, one screen, all editable.
-            </h2>
-            <div className="mt-10 grid gap-4 md:grid-cols-2">
-              {DELIVERS.map((d) => (
-                <div key={d.label} className="panel p-6">
-                  <h3 className="font-display text-lg font-semibold">{d.label}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{d.body}</p>
+          <div className="panel flex flex-col gap-4 p-5" aria-hidden="true">
+            <div className="flex items-center justify-between">
+              <span className="font-display font-semibold">Festive season push</span>
+              <span className="font-mono text-xs text-support">PLAN READY</span>
+            </div>
+            <div className="grid grid-cols-7 gap-1.5">
+              {Array.from({ length: 21 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-7 rounded-md border border-border ${
+                    [1, 3, 5, 8, 10, 12, 15, 17, 19].includes(i) ? "bg-primary/30" : "bg-surface"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                ["Approved", "12 / 16"],
+                ["Budget used", "58%"],
+                ["Next moment", "5 days"],
+              ].map(([k, v]) => (
+                <div key={k} className="rounded-lg border border-border bg-background p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+                    {k}
+                  </p>
+                  <p className="mt-1 font-display text-lg font-semibold">{v}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
+        <section id="features" className="border-t border-border">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <p className="eyebrow">What you get</p>
+            <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance md:text-4xl">
+              Everything between the brief and the results
+            </h2>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {FEATURES.map((f) => (
+                <div key={f.title} className="panel p-6">
+                  <h3 className="font-display text-lg font-semibold">{f.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="how" className="border-t border-border">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <p className="eyebrow">How it works</p>
+            <h2 className="mt-3 text-3xl font-semibold md:text-4xl">
+              From brief to results in four steps
+            </h2>
+            <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+              {STEPS.map((s, i) => (
+                <div key={s.title} className="bg-surface p-6">
+                  <p className="font-mono text-xs text-primary">Step {i + 1}</p>
+                  <h3 className="mt-3 font-display text-base font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-border">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <p className="eyebrow">Channels</p>
+            <h2 className="mt-3 text-3xl font-semibold md:text-4xl">
+              Plan content for the channels you use
+            </h2>
+            <div className="mt-8 flex flex-wrap gap-2">
+              {CHANNELS.map((c) => (
+                <span key={c} className="rounded-full border border-border px-4 py-2 text-sm">
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-border">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <div className="panel flex flex-wrap items-center justify-between gap-6 p-8">
+              <h2 className="text-2xl font-semibold md:text-3xl">
+                Start planning your next campaign
+              </h2>
+              <Link to={primaryTo}>
+                <Button size="lg" className="shadow-signal">
+                  {primaryLabel}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="border-t border-border py-10">
-        <div className="mx-auto max-w-6xl px-5 text-xs text-muted-foreground">
-          CampaignForge — AI campaign planner.
+        <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 px-5 text-xs text-muted-foreground">
+          <span>CampaignForge — campaign planning and tracking.</span>
+          <span>© 2026 CampaignForge</span>
         </div>
       </footer>
     </div>

@@ -6,6 +6,7 @@ import {
   ClipboardCheck,
   Folder,
   GitCompare,
+  LayoutDashboard,
   LayoutGrid,
   LogOut,
   Megaphone,
@@ -69,14 +70,18 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link to="/campaigns">
+              <Link to="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-signal text-xs font-bold text-primary-foreground">
                   CF
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-display font-semibold">CampaignForge</span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {isAdmin ? "Workspace admin" : roles.includes("reviewer") ? "Reviewer" : "Campaign manager"}
+                    {isAdmin
+                      ? "Workspace admin"
+                      : roles.includes("reviewer")
+                        ? "Reviewer"
+                        : "Campaign manager"}
                   </span>
                 </div>
               </Link>
@@ -89,6 +94,14 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Dashboard" isActive={path === "/dashboard"}>
+                <Link to="/dashboard">
+                  <LayoutDashboard />
+                  <span>Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <Collapsible asChild defaultOpen className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
@@ -179,7 +192,9 @@ export function AppSidebar() {
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{user?.email}</span>
-                    <span className="truncate text-xs text-muted-foreground">{roles.join(" · ")}</span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {roles.join(" · ")}
+                    </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -190,7 +205,9 @@ export function AppSidebar() {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel className="text-xs text-muted-foreground">{user?.email}</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  {user?.email}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={async () => {
